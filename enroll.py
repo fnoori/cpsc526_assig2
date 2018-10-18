@@ -32,6 +32,8 @@
 import sys
 import enchant
 
+REJECTED = "rejected"
+
 def main():
     username = sys.argv[1]
     password = sys.argv[2]
@@ -39,11 +41,21 @@ def main():
     checkPassword(sys.argv[2])
 
 def checkPassword(password):
+
+    # check if password is a single English word
+    if (isWord(password)):
+        print(REJECTED)
+        sys.exit(-1)
+
+    # check if password is just numbers
+    
+
+def isWord(input):
     wordChecker = enchant.Dict("en_US")
 
-    if (wordChecker.check(password)):
-        print("That's a word !")
+    if (wordChecker.check(input)):
+        return True
     else:
-        print("That's not a word !")
+        return False
 
 main()
