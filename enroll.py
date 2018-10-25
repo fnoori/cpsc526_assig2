@@ -130,5 +130,6 @@ def rejected():
     sys.exit(-1)    
 
 
-# program start point
-main()
+# runs only when it is not called via import
+if __name__ == "__main__":
+   main()
