@@ -5,9 +5,16 @@
 #   Tutorial:           03
 #   Assignemnt:         2 (Programming Part)
 #
+#   Enroll Program
+#
 #   This program takes 2 command line arguments:
 #       argv[1]: username
 #       argv[2]: password
+#
+# --------------------------------------------------------------------------
+#
+#   Using argon2 library to encrypt password using Argon2 hashing algorithm
+#   Using Enchant to determine if a string is an English word
 #
 #*******************************************************************
 
@@ -18,17 +25,19 @@ import re
 import argon2
 import random
 
-REJECTED = "rejected"
-ACCEPTED = "accepted"
+REJECTED = "rejected\n"
+ACCEPTED = "accepted\n"
 CREDENTIALS = "credentials.json"
 
 def main():
     username = sys.argv[1]
     password = sys.argv[2]
 
+    # check if username is taken
     if userAlreadyExists(username):
         rejected()
 
+    # check if password conforms to the requirements
     if checkPassword(sys.argv[2]):
         accepted(username, password)
 
