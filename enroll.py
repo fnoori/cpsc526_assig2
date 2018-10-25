@@ -1,20 +1,3 @@
-# Command line arguments:
-#   username:
-#       username can't be previously enrolled
-#
-#   password:
-#       password is not simple:
-#           "[word], [num], [wordnum], and [numword]" are forbidden
-#
-#
-#   if username/passwrod confrom to the requirements:
-#       print "accepted"
-#       username/password stored in password file
-#       exit code 0
-#       
-#   otherwise:
-#       print "rejected"
-#       exit code -1
 #
 #   Developed by:       Farzam Noori
 #   UCID:               10121495
@@ -26,17 +9,6 @@
 #       argv[1]: username
 #       argv[2]: password
 #
-#
-'''
-    jsonData = json.loads(open(CREDENTIALS).read())
-
-    try:
-        print(jsonData["usr1"])
-    except KeyError:
-        print("user doesn't exist")
-
-    return
-'''
 #*******************************************************************
 
 import sys
@@ -44,6 +16,7 @@ import enchant
 import json
 import re
 import argon2
+import random
 
 REJECTED = "rejected"
 ACCEPTED = "accepted"
@@ -52,6 +25,9 @@ CREDENTIALS = "credentials.json"
 def main():
     username = sys.argv[1]
     password = sys.argv[2]
+
+    if userAlreadyExists(username):
+        rejected()
 
     if checkPassword(sys.argv[2]):
         accepted(username, password)
@@ -70,6 +46,27 @@ def checkPassword(password):
 
     return True
 
+
+# check if username already exists
+def userAlreadyExists(username):
+    userExists = False
+
+    with open(CREDENTIALS, "r") as file:
+        try:
+            fileContents = json.load(file)
+
+            # find the username in the password file
+            if fileContents[username]:
+                userExists = True
+            else:
+                userExists = False
+        except:
+            userExists = False
+
+    return userExists
+
+
+# check if input is an English word
 def isWord(input):
     wordChecker = enchant.Dict("en_US")
 
@@ -79,24 +76,26 @@ def isWord(input):
         return False
 
 
+# acceptance function
 def accepted(username, password):
     userData = {}
     fileContents = {}
-    isFileEmpty = False
 
+    # read file, even if it's empty
     with open(CREDENTIALS, "r") as outfile:
+
+        # check if file is empty
         try:
             fileContents = json.load(outfile)
-            isFileEmpty = True
         except:
-            print("file empty")
-            isFileEmpty = False
-        
-
-    hashedPassword = argon2.argon2_hash(password=password, salt="BLAH")
+            '''do nothing'''
+    
+    # generate unique salt for user
+    salt = generateSalt()
+    hashedPassword = str(argon2.argon2_hash(password=password, salt=salt))
     userData[username] = {
-        "password": password,
-        "salt": "BLAH"
+        "password": hashedPassword,
+        "salt": salt
     }
 
     fileContents.update(userData)
@@ -107,6 +106,16 @@ def accepted(username, password):
     print(ACCEPTED)
 
 
+# random salt from random library
+def generateSalt():
+    salt = ""
+    for i in range(0, 15):
+        salt += str(random.randint(0, 9))
+
+    return salt
+
+
+# generic reject function
 def rejected():
     print(REJECTED)
     sys.exit(-1)    
