@@ -2,6 +2,7 @@ import enroll
 import sys
 import pytest
 
+'''
 # good password
 # should pass
 @pytest.mark.parametrize("password", [
@@ -111,7 +112,33 @@ def test_fakeWord(input):
     assert result == False    
 
 
+# create user with correct username/password
+# when this test finishes, new users with the ones specified are added to the credentials.json file
+# should pass
+@pytest.mark.parametrize("username, password", [
+    ("mouse", "fjueurk"),
+    ("cat", "fjuejek13837"),
+    ("bounce", "epwnnru197"),
+])
+def test_successfulCompleteUserCreation(username, password):
+    alreadyExistsResult = enroll.userAlreadyExists(username)
+    result = enroll.accepted(username, password)
 
+    assert result == None
+'''
+
+
+@pytest.mark.parametrize("username, password", [
+    ("mouse", "123flower"),
+    ("cat", "Water1983"),
+    ("bounce", "123"),
+    ("bounce", "snow"),
+])
+def test_failedCompleteUserCreation(username, password):
+    alreadyExistsResult = enroll.userAlreadyExists(username)
+    result = enroll.accepted(username, password)
+
+    assert result == None
 
 
 
