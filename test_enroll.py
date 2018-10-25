@@ -2,7 +2,116 @@ import enroll
 import sys
 import pytest
 
-@pytest.mark.goodPassword
-def test_checkPassword():
-    result = enroll.checkPassword("asdffj")
+# good password
+# should pass
+@pytest.mark.parametrize("password", [
+    ("fuj-ehd"),
+    ("io'fk"),
+    ("ryiec`837"),
+    ("gjfin]"),
+])  
+def test_goodPassword(password):
+    result = enroll.checkPassword(password)
     assert result == True
+
+
+# [number][word]
+# should fail
+@pytest.mark.parametrize("password", [
+    ("1239ice"),
+    ("8.01table"),
+    ("6.19get"),
+])  
+def test_badNumWordPassword(password):
+    # since on fail, sys.exit() is called
+    with pytest.raises(SystemExit) as sysExit:
+        result = enroll.checkPassword(password)
+
+        # check for both exit type and exit code
+        assert sysExit.type == SystemExit
+        assert sysExit.value.code == -1
+
+
+# [word][number]     
+@pytest.mark.parametrize("password", [
+    ("mouse123"),
+    ("guard1.20"),
+    ("phone20.01"),
+])  
+def test_badWordNumPassword(password):
+    # since on fail, sys.exit() is called
+    with pytest.raises(SystemExit) as sysExit:
+        result = enroll.checkPassword(password)
+
+        # check for both exit type and exit code
+        assert sysExit.type == SystemExit
+        assert sysExit.value.code == -1
+
+
+# [word]
+# should fail
+@pytest.mark.parametrize("password", [
+    ("Hey"),
+    ("Edward"),
+    ("How"),
+    ("Is"),
+    ("It"),
+    ("Going"),
+])
+def test_wordPassword(password):
+    # since on fail, sys.exit() is called
+    with pytest.raises(SystemExit) as sysExit:
+        result = enroll.checkPassword(password)
+
+        # check for both exit type and exit code
+        assert sysExit.type == SystemExit
+        assert sysExit.value.code == -1
+
+
+# [number]
+# should fail
+@pytest.mark.parametrize("password", [
+    ("123"),
+    ("9723"),
+    ("123382748273498"),
+    ("1.2937338"),
+])  
+def test_numberPassword(password):
+    # since on fail, sys.exit() is called
+    with pytest.raises(SystemExit) as sysExit:
+        result = enroll.checkPassword(password)
+
+        # check for both exit type and exit code
+        assert sysExit.type == SystemExit
+        assert sysExit.value.code == -1
+
+
+# see if string is word
+# return true if input is a word
+@pytest.mark.parametrize("input", [
+    ("Internet"),
+    ("of"),
+    ("Things"),
+])
+def test_realEnglishWord(input):
+    result = enroll.isWord(input)
+
+    assert result == True
+
+
+# see if string is word
+# return true if input is not a word
+@pytest.mark.parametrize("input", [
+    ("asfiue"),
+    ("aerfnf"),
+    ("sfufmfkdooo"),
+])
+def test_fakeWord(input):
+    result = enroll.isWord(input)
+    assert result == False    
+
+
+
+
+
+

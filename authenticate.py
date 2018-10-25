@@ -73,4 +73,8 @@ def accessDenied():
     print(ACCESS_DENIED)
     sys.exit(-1)
 
-main()
+
+
+# runs only when it is not called via import
+if __name__ == "__main__":
+   main()
