@@ -2,9 +2,7 @@ import enroll
 import sys
 import pytest
 
-'''
 # good password
-# should pass
 @pytest.mark.parametrize("password", [
     ("fuj-ehd"),
     ("io'fk"),
@@ -17,7 +15,6 @@ def test_goodPassword(password):
 
 
 # [number][word]
-# should fail
 @pytest.mark.parametrize("password", [
     ("1239ice"),
     ("8.01table"),
@@ -50,7 +47,6 @@ def test_badWordNumPassword(password):
 
 
 # [word]
-# should fail
 @pytest.mark.parametrize("password", [
     ("Hey"),
     ("Edward"),
@@ -70,7 +66,6 @@ def test_wordPassword(password):
 
 
 # [number]
-# should fail
 @pytest.mark.parametrize("password", [
     ("123"),
     ("9723"),
@@ -114,7 +109,6 @@ def test_fakeWord(input):
 
 # create user with correct username/password
 # when this test finishes, new users with the ones specified are added to the credentials.json file
-# should pass
 @pytest.mark.parametrize("username, password", [
     ("mouse", "fjueurk"),
     ("cat", "fjuejek13837"),
@@ -125,9 +119,9 @@ def test_successfulCompleteUserCreation(username, password):
     result = enroll.accepted(username, password)
 
     assert result == None
-'''
 
 
+# create user with incorrect password
 @pytest.mark.parametrize("username, password", [
     ("mouse", "123flower"),
     ("cat", "Water1983"),
@@ -135,10 +129,10 @@ def test_successfulCompleteUserCreation(username, password):
     ("bounce", "snow"),
 ])
 def test_failedCompleteUserCreation(username, password):
-    alreadyExistsResult = enroll.userAlreadyExists(username)
-    result = enroll.accepted(username, password)
+    with pytest.raises(SystemExit) as sysExit:
+        alreadyExistsResult = enroll.userAlreadyExists(username)
+        passwordResult = enroll.checkPassword(password)
+        result = enroll.accepted(username, password)
 
-    assert result == None
-
-
-
+        assert sysExit.type == SystemExit
+        assert sysExit.value.code == -1
