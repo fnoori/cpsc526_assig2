@@ -75,7 +75,7 @@ def userAlreadyExists(username):
     return userExists
 
 
-# check if input is an English word
+# check if input is an English word using enchnat
 def isWord(input):
     wordChecker = enchant.Dict("en_US")
 
@@ -94,6 +94,8 @@ def accepted(username, password):
     with open(CREDENTIALS, "r") as outfile:
 
         # check if file is empty
+        # this try-catch needs to be here, or else if reading
+        #  an empty file, program will crash
         try:
             fileContents = json.load(outfile)
         except:
@@ -109,6 +111,7 @@ def accepted(username, password):
 
     fileContents.update(userData)
 
+    # write updates to credential file
     with open("credentials.json", "w") as outfile:
         json.dump(fileContents, outfile)
 

@@ -47,7 +47,7 @@ def loginUser(username, password):
                 jsonPassword = fileContents[username]["password"]
                 jsonSalt = fileContents[username]["salt"]
 
-                # hash given password
+                # hash given password using argon2
                 hashedPassword = str(argon2.argon2_hash(password=password, salt=jsonSalt))
 
                 # check if stored (hashed) password is same as the hashed inputted password
