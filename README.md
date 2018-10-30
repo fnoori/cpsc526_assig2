@@ -30,6 +30,8 @@ Testing using pytest.
   2. Navigate to project directory
   3. Run by typing in ```pytest```
       * If you want a verbose output, type in ```pytest -v```
+  * **Note**
+    * **The description of the unit tests are specified in the unit test files as function comments**
 
 ## Library Used
 * enchant
